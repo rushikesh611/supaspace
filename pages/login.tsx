@@ -20,7 +20,7 @@ const Login: React.FC<loginProps> = ({}) => {
         if (res.error) throw res.error;
         const userId = res.data.user?.id;
         console.log("User logged in", userId);
-        router.push("/");
+        router.push("/hrushikesh611");
       }
     } catch {
       console.log("Error logging in");

@@ -1,9 +1,10 @@
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
-import supabase from "../utils/supabaseClient";
+import supabase from "../../utils/supabaseClient";
 import Head from "next/head";
 import ImageUploading, { ImageListType } from "react-images-uploading";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 type Link = {
   title: string;
@@ -20,6 +21,8 @@ const Home: NextPage = () => {
   const [profilePictureUrl, setProfilePictureUrl] = useState<
     string | undefined
   >();
+  const router = useRouter();
+  const { creatorSlug } = router.query;
 
   const onChange = (imageList: ImageListType) => {
     // data for submit
@@ -90,20 +93,22 @@ const Home: NextPage = () => {
       try {
         const { data, error } = await supabase
           .from("users")
-          .select("profile_picture_url")
-          .eq("id", userId);
+          .select("id, profile_picture_url")
+          .eq("username", creatorSlug);
         if (error) throw error;
+        const userId = data[0]["id"];
         const profilePictureUrl = data[0]["profile_picture_url"];
         setProfilePictureUrl(profilePictureUrl);
+        setUserId(userId);
       } catch (error) {
         console.log("error:", error);
       }
     };
 
-    if (userId) {
+    if (creatorSlug) {
       getUser();
     }
-  }, [userId]);
+  }, [creatorSlug]);
 
   const addNewLink = async () => {
     try {

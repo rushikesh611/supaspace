@@ -6,6 +6,7 @@ interface signupProps {}
 const Signup: React.FC<signupProps> = ({}) => {
   const [email, setEmail] = useState<string | undefined>();
   const [password, setPassword] = useState<string | undefined>();
+  const [username, setUsername] = useState<string | undefined>();
 
   async function signUpWithEmail() {
     try {
@@ -29,7 +30,9 @@ const Signup: React.FC<signupProps> = ({}) => {
 
   async function createUser(userId: any) {
     try {
-      const { error } = await supabase.from("users").insert({ id: userId });
+      const { error } = await supabase
+        .from("users")
+        .insert({ id: userId, username: username });
       if (error) throw error;
     } catch (error) {
       console.log("error:", error);
@@ -39,6 +42,19 @@ const Signup: React.FC<signupProps> = ({}) => {
   return (
     <div className="flex flex-col w-full justify-center items-center">
       <div className="form-control w-full max-w-xs mt-4">
+        <label className="label" htmlFor="username">
+          <span className="label-text">Username</span>
+        </label>
+        <input
+          type="text"
+          name="username"
+          id="username"
+          placeholder="sushi6911"
+          className="input input-bordered w-full max-w-xs input-md"
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
+      <div className="form-control w-full max-w-xs">
         <label className="label" htmlFor="email">
           <span className="label-text">Email</span>
         </label>
