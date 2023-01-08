@@ -17,10 +17,22 @@ const Signup: React.FC<signupProps> = ({}) => {
 
         if (res.error) throw res.error;
         const userId = res.data.user?.id;
-        console.log("User created", userId);
+        if (userId) {
+          await createUser(userId);
+          console.log("User created", userId);
+        }
       }
     } catch {
       console.log("Error creating user");
+    }
+  }
+
+  async function createUser(userId: any) {
+    try {
+      const { error } = await supabase.from("users").insert({ id: userId });
+      if (error) throw error;
+    } catch (error) {
+      console.log("error:", error);
     }
   }
 
